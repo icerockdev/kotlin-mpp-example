@@ -37,7 +37,7 @@ dependencies {
 
 kotlin {
     targets {
-        fromPreset(presets.android, 'androidLib')
+        fromPreset(presets.android, 'android')
 
         def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
         def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64

@@ -24,13 +24,9 @@ android {
     }
 }
 
-kotlin {
-    targets.fromPreset(presets.android, 'android')
-}
-
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation project(':greeting')
+    implementation project(':sharedLib')
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
 
