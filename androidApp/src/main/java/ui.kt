@@ -5,13 +5,16 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.LinearLayout
 import android.widget.TextView
-import org.greeting.Factory
+import shared.model.repository.GitHubRepository
 import kotlin.properties.Delegates
 
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         println("Application init")
+
+        val repository = GitHubRepository()
+        repository.loadRepositories()
     }
 }
 
@@ -25,9 +28,7 @@ class MainActivity : AppCompatActivity() {
         rootLayout = findViewById(R.id.main_view) as LinearLayout
         rootLayout.removeAllViews()
 
-        val product = Factory.create(mapOf("user" to "JetBrains"))
         val tv = TextView(this)
-        tv.text = product.toString()
         rootLayout.addView(tv)
     }
 }

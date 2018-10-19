@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform'
 }
 
-group = 'org.greeting'
+group = 'sharedLib'
 version = 1.0
 
 android {
@@ -50,12 +50,36 @@ kotlin {
         commonMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+                
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+
+                implementation "io.ktor:ktor-client:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
             }
         }
         commonTest {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-common'
                 implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+            }
+        }
+        androidMain {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
+
+                implementation "io.ktor:ktor-client-android:$ktor_version"
+                implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+            }
+        }
+        iosMain {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutines_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+
+                implementation "io.ktor:ktor-client-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-json-ios:$ktor_version"
             }
         }
     }
