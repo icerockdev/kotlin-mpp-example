@@ -1,14 +1,18 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.multiplatform'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'kotlinx-serialization'
 }
 
 android {
-    compileSdkVersion compile_sdk
+    compileSdkVersion Versions.compile_sdk
+
     defaultConfig {
         applicationId "org.konan.multiplatform"
-        minSdkVersion min_sdk
-        targetSdkVersion target_sdk
+        minSdkVersion Versions.min_sdk
+        targetSdkVersion Versions.target_sdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -22,18 +26,29 @@ android {
     packagingOptions {
         exclude 'META-INF/main.kotlin_module'
     }
+
+    dataBinding {
+        enabled true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin_version}"
     implementation project(':sharedLib')
 
-    implementation "com.android.support:appcompat-v7:$support_lib_version"
+    implementation "com.android.support:appcompat-v7:${Versions.support_lib_version}"
+    implementation "com.android.support:recyclerview-v7:${Versions.support_lib_version}"
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test"
-    testImplementation "junit:junit:$junit_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.serialization_version}"
 
-    androidTestImplementation "junit:junit:$junit_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:${Versions.kotlin_version}"
+    testImplementation "junit:junit:${Versions.junit_version}"
+
+    androidTestImplementation "junit:junit:${Versions.junit_version}"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

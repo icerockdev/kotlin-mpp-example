@@ -1,47 +1,17 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.multiplatform'
+    id 'kotlin-multiplatform'
+    id 'kotlinx-serialization'
 }
 
 group = 'sharedLib'
 version = 1.0
 
-android {
-    compileSdkVersion 27
-    defaultConfig {
-        minSdkVersion 15
-    }
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    // Specify Kotlin/JVM stdlib dependency.
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7'
-
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
-
-    androidTestImplementation 'junit:junit:4.12'
-    androidTestImplementation 'org.jetbrains.kotlin:kotlin-test'
-    androidTestImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
-
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-}
-
 kotlin {
     targets {
         fromPreset(presets.android, 'android')
 
-        def buildForDevice = project.findProperty("device")?.toBoolean() ?: false
-        def iosPreset = (buildForDevice) ? presets.iosArm64 : presets.iosX64
-        fromPreset(iosPreset, 'ios') {
+        fromPreset(presets.iosX64, 'ios') {
             compilations.main.outputKinds('FRAMEWORK')
         }
     }
@@ -51,11 +21,11 @@ kotlin {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
                 
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutines_version}"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:${Versions.serialization_version}"
 
-                implementation "io.ktor:ktor-client:$ktor_version"
-                implementation "io.ktor:ktor-client-json:$ktor_version"
+                implementation "io.ktor:ktor-client:${Versions.ktor_version}"
+                implementation "io.ktor:ktor-client-json:${Versions.ktor_version}"
             }
         }
         commonTest {
@@ -65,21 +35,38 @@ kotlin {
             }
         }
         androidMain {
-            dependencies {
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
 
-                implementation "io.ktor:ktor-client-android:$ktor_version"
-                implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+            android {
+                compileSdkVersion Versions.compile_sdk
+
+
+                defaultConfig {
+                    minSdkVersion Versions.min_sdk
+                }
+                buildTypes {
+                    release {
+                        minifyEnabled true
+                        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                    }
+                }
+            }
+
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines_version}"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines_version}"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.serialization_version}"
+
+                implementation "io.ktor:ktor-client-android:${Versions.ktor_version}"
+                implementation "io.ktor:ktor-client-json-jvm:${Versions.ktor_version}"
             }
         }
         iosMain {
             dependencies {
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutines_version"
-                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:${Versions.coroutines_version}"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:${Versions.serialization_version}"
 
-                implementation "io.ktor:ktor-client-ios:$ktor_version"
-                implementation "io.ktor:ktor-client-json-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-ios:${Versions.ktor_version}"
+                implementation "io.ktor:ktor-client-json-ios:${Versions.ktor_version}"
             }
         }
     }
@@ -95,8 +82,8 @@ task copyFramework {
         copy {
             from srcFile.parent
             into targetDir
-            include 'greeting.framework/**'
-            include 'greeting.framework.dSYM'
+            include 'sharedLib.framework/**'
+            include 'sharedLib.framework.dSYM'
         }
     }
 }
